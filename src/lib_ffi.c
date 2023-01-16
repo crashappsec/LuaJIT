@@ -673,10 +673,14 @@ LJLIB_CF(ffi_offsetof)	LJLIB_REC(ffi_xof FF_ffi_offsetof)
 
 LJLIB_CF(ffi_errno)	LJLIB_REC(.)
 {
+#ifndef LUAJIT_DISABLE_ERRNO
   int err = errno;
   if (L->top > L->base)
     errno = ffi_checkint(L, 1);
   setintV(L->top++, err);
+#else
+  setintV(L->top++, 0);
+#endif
   return 1;
 }
 

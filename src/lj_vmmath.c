@@ -111,7 +111,11 @@ double lj_vm_foldfpm(double x, int fpm)
 #if LJ_HASFFI
 int lj_vm_errno(void)
 {
+#ifndef LUAJIT_DISABLE_ERRNO
   return errno;
+#else
+  return 0;
+#endif
 }
 #endif
 
