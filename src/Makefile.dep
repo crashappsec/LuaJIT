@@ -218,6 +218,7 @@ lj_vmevent.o: lj_vmevent.c lj_obj.h lua.h luaconf.h lj_def.h lj_arch.h \
  lj_vm.h lj_vmevent.h
 lj_vmmath.o: lj_vmmath.c lj_obj.h lua.h luaconf.h lj_def.h lj_arch.h \
  lj_ir.h lj_vm.h
+lj_stdio.o: lj_stdio.c lua.h lj_def.h lj_arch.h
 ljamalg.o: ljamalg.c lua.h luaconf.h lauxlib.h lj_assert.c lj_obj.h \
  lj_def.h lj_arch.h lj_gc.c lj_gc.h lj_err.h lj_errmsg.h lj_buf.h \
  lj_str.h lj_tab.h lj_func.h lj_udata.h lj_meta.h lj_state.h lj_frame.h \

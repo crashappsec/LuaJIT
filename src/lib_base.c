@@ -516,6 +516,8 @@ LJLIB_CF(newproxy)
 LJLIB_PUSH("tostring")
 LJLIB_CF(print)
 {
+  lua_Print print = G(L)->printf;
+  void *printd = G(L)->printd;
   ptrdiff_t i, nargs = L->top - L->base;
   cTValue *tv = lj_tab_getstr(tabref(L->env), strV(lj_lib_upvalue(L, 1)));
   int shortcut;
@@ -546,10 +548,10 @@ LJLIB_CF(print)
       L->top--;
     }
     if (i)
-      putchar('\t');
-    fwrite(str, 1, size, stdout);
+      print(L, "\t", 1, printd);
+    print(L, str, size, printd);
   }
-  putchar('\n');
+  print(L, "\n", 1, printd);
   return 0;
 }
 

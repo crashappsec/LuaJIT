@@ -314,13 +314,12 @@ LUALIB_API void luaL_unref(lua_State *L, int t, int ref)
 
 static int panic(lua_State *L)
 {
-  const char *s = lua_tostring(L, -1);
-  fputs("PANIC: unprotected error in call to Lua API (", stderr);
-  fputs(s ? s : "?", stderr);
-  fputc(')', stderr); fputc('\n', stderr);
-  fflush(stderr);
-  return 0;
+  global_State *g = G(L);
+  return g->panicf(L, g->panicd);
 }
+
+extern int lj_stdio_panic(lua_State *L, void *panic_ud);
+extern long lj_stdio_print(lua_State *L, const void *p, size_t sz, void *print_ud);
 
 #ifdef LUAJIT_USE_SYSMALLOC
 
@@ -343,7 +342,11 @@ static void *mem_alloc(void *ud, void *ptr, size_t osize, size_t nsize)
 LUALIB_API lua_State *luaL_newstate(void)
 {
   lua_State *L = lua_newstate(mem_alloc, NULL);
-  if (L) G(L)->panic = panic;
+  if (L) {
+    G(L)->panic = panic;
+    G(L)->panicf = lj_stdio_panic;
+    G(L)->printf = lj_stdio_print;
+  }
   return L;
 }
 
@@ -357,7 +360,11 @@ LUALIB_API lua_State *luaL_newstate(void)
 #else
   L = lua_newstate(LJ_ALLOCF_INTERNAL, NULL);
 #endif
-  if (L) G(L)->panic = panic;
+  if (L) {
+    G(L)->panic = panic;
+    G(L)->panicf = lj_stdio_panic;
+    G(L)->printf = lj_stdio_print;
+  }
   return L;
 }
 
