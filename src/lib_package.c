@@ -367,6 +367,7 @@ static void loaderror(lua_State *L, const char *filename)
 	     lua_tostring(L, 1), filename, lua_tostring(L, -1));
 }
 
+#ifndef LUAJIT_DISABLE_LOADFILE
 static int lj_cf_package_loader_lua(lua_State *L)
 {
   const char *filename;
@@ -377,6 +378,7 @@ static int lj_cf_package_loader_lua(lua_State *L)
     loaderror(L, filename);
   return 1;  /* library loaded successfully */
 }
+#endif
 
 static int lj_cf_package_loader_c(lua_State *L)
 {
@@ -584,7 +586,9 @@ static const luaL_Reg package_global[] = {
 static const lua_CFunction package_loaders[] =
 {
   lj_cf_package_loader_preload,
+#ifndef LUAJIT_DISABLE_LOADFILE
   lj_cf_package_loader_lua,
+#endif
   lj_cf_package_loader_c,
   lj_cf_package_loader_croot,
   NULL
