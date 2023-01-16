@@ -76,4 +76,12 @@ LUA_API const char *luaJIT_profile_dumpstack(lua_State *L, const char *fmt,
 /* Enforce (dynamic) linker error for version mismatches. Call from main. */
 LUA_API void LUAJIT_VERSION_SYM(void);
 
+typedef int (*lua_Panic)(lua_State *L, void *panic_ud);
+
+typedef long (*lua_Print)(lua_State *L, const void *p, size_t sz, void *print_ud);
+
+LUA_API lua_State *luaJIT_newstate(lua_Alloc alloc_f, void *alloc_ud,
+				   lua_Panic panic_f, void *panic_ud,
+				   lua_Print print_f, void *print_ud);
+
 #endif

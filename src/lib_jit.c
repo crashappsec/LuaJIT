@@ -759,3 +759,20 @@ LUALIB_API int luaopen_jit(lua_State *L)
   return 1;
 }
 
+LUA_API lua_State *luaJIT_newstate(lua_Alloc alloc_f, void *alloc_ud,
+				   lua_Panic panic_f, void *panic_ud,
+				   lua_Print print_f, void *print_ud)
+{
+  lua_State *L = lua_newstate(alloc_f, alloc_ud);
+  if (L) {
+      if (panic_f) {
+	G(L)->panicf = panic_f;
+	G(L)->panicd = panic_ud;
+      }
+      if (print_f) {
+	G(L)->printf = print_f;
+	G(L)->printd = print_ud;
+      }
+  }
+  return L;
+}

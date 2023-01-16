@@ -10,6 +10,7 @@
 #define _LJ_OBJ_H
 
 #include "lua.h"
+#include "luajit.h"
 #include "lj_def.h"
 #include "lj_arch.h"
 
@@ -631,6 +632,10 @@ typedef struct StrInternState {
 typedef struct global_State {
   lua_Alloc allocf;	/* Memory allocator. */
   void *allocd;		/* Memory allocator data. */
+  lua_Panic panicf;	/* Panic handler. */
+  void *panicd;		/* Panic handler data. */
+  lua_Print printf;	/* Print to stdout. */
+  void *printd;		/* Print to stdout data. */
   GCState gc;		/* Garbage collector. */
   GCstr strempty;	/* Empty string. */
   uint8_t stremptyz;	/* Zero terminator of empty string. */
