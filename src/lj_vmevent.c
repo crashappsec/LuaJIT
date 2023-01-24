@@ -16,6 +16,8 @@
 #include "lj_vm.h"
 #include "lj_vmevent.h"
 
+#ifndef LUAJIT_DISABLE_VMEVENT
+
 ptrdiff_t lj_vmevent_prepare(lua_State *L, VMEvent ev)
 {
   global_State *g = G(L);
@@ -56,3 +58,4 @@ void lj_vmevent_call(lua_State *L, ptrdiff_t argbase)
     g->vmevmask = oldmask;  /* Restore event mask, but not if not modified. */
 }
 
+#endif
