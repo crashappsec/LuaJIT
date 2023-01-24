@@ -228,7 +228,7 @@ int LJ_FASTCALL lj_prng_seed_secure(PRNGState *rs)
   */
   {
     int fd = open("/dev/urandom", O_RDONLY|O_CLOEXEC);
-    if (fd != -1) {
+    if (fd >= 0) {
       ssize_t n = read(fd, rs->u, sizeof(rs->u));
       (void)close(fd);
       if (n == (ssize_t)sizeof(rs->u))
