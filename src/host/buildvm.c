@@ -283,7 +283,11 @@ IRFLDEF(FLNAME)
 
 const char *const ircall_names[] = {
 #define IRCALLNAME(cond, name, nargs, kind, type, flags)	#name,
-IRCALLDEF(IRCALLNAME)
+IRCALLDEF_0(IRCALLNAME)
+#ifndef LUAJIT_DISABLE_STDIO_FILE
+IRCALLDEF_STDIO(IRCALLNAME)
+#endif
+IRCALLDEF_1(IRCALLNAME)
 #undef IRCALLNAME
   NULL
 };
