@@ -150,7 +150,7 @@ typedef struct CCallInfo {
 #endif
 
 /* Function definitions for CALL* instructions. */
-#define IRCALLDEF(_) \
+#define IRCALLDEF_0(_) \
   _(ANY,	lj_str_cmp,		2,  FN, INT, CCI_NOFPRCLOBBER) \
   _(ANY,	lj_str_find,		4,   N, PGC, 0) \
   _(ANY,	lj_str_new,		3,   S, STR, CCI_L|CCI_T) \
@@ -206,10 +206,12 @@ typedef struct CCallInfo {
   _(ANY,	atan,			1,   N, NUM, XA_FP) \
   _(ANY,	sinh,			1,   N, NUM, XA_FP) \
   _(ANY,	cosh,			1,   N, NUM, XA_FP) \
-  _(ANY,	tanh,			1,   N, NUM, XA_FP) \
+  _(ANY,	tanh,			1,   N, NUM, XA_FP)
+#define IRCALLDEF_STDIO(_) \
   _(ANY,	fputc,			2,   S, INT, 0) \
   _(ANY,	fwrite,			4,   S, INT, 0) \
-  _(ANY,	fflush,			1,   S, INT, 0) \
+  _(ANY,	fflush,			1,   S, INT, 0)
+#define IRCALLDEF_1(_) \
   /* ORDER FPM */ \
   _(FPMATH,	lj_vm_floor,		1,   N, NUM, XA_FP) \
   _(FPMATH,	lj_vm_ceil,		1,   N, NUM, XA_FP) \
@@ -270,7 +272,11 @@ typedef struct CCallInfo {
 
 typedef enum {
 #define IRCALLENUM(cond, name, nargs, kind, type, flags)	IRCALL_##name,
-IRCALLDEF(IRCALLENUM)
+IRCALLDEF_0(IRCALLENUM)
+#ifndef LUJIT_DISABLE_STDIO_FILE
+IRCALLDEF_STDIO(IRCALLENUM)
+#endif
+IRCALLDEF_1(IRCALLENUM)
 #undef IRCALLENUM
   IRCALL__MAX
 } IRCallID;

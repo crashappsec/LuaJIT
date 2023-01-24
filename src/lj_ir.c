@@ -62,7 +62,11 @@ LJ_DATADEF const CCallInfo lj_ir_callinfo[] = {
 #define IRCALLCI(cond, name, nargs, kind, type, flags) \
   { (ASMFunction)IRCALLCOND_##cond(name), \
     (nargs)|(CCI_CALL_##kind)|(IRT_##type<<CCI_OTSHIFT)|(flags) },
-IRCALLDEF(IRCALLCI)
+IRCALLDEF_0(IRCALLCI)
+#ifndef LUAJIT_DISABLE_STDIO_FILE
+IRCALLDEF_STDIO(IRCALLCI)
+#endif
+IRCALLDEF_1(IRCALLCI)
 #undef IRCALLCI
   { NULL, 0 }
 };

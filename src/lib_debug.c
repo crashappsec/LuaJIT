@@ -361,6 +361,7 @@ LJLIB_CF(debug_gethook)
 
 LJLIB_CF(debug_debug)
 {
+#ifndef LUAJIT_DISABLE_STDIO_FILE
   for (;;) {
     char buffer[250];
     fputs("lua_debug> ", stderr);
@@ -375,6 +376,9 @@ LJLIB_CF(debug_debug)
     }
     lua_settop(L, 0);  /* remove eventual returns */
   }
+#else
+  return 0;
+#endif
 }
 
 /* ------------------------------------------------------------------------ */
