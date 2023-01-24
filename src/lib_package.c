@@ -294,6 +294,8 @@ static int lj_cf_package_unloadlib(lua_State *L)
 
 /* ------------------------------------------------------------------------ */
 
+#ifndef LUAJIT_DISABLE_PACKAGE_LOADERS
+
 static int readable(const char *filename)
 {
   FILE *f = fopen(filename, "r");  /* try to open file */
@@ -301,6 +303,8 @@ static int readable(const char *filename)
   fclose(f);
   return 1;
 }
+
+#endif
 
 static const char *pushnexttemplate(lua_State *L, const char *path)
 {
@@ -325,8 +329,10 @@ static const char *searchpath (lua_State *L, const char *name,
     const char *filename = luaL_gsub(L, lua_tostring(L, -1),
 				     LUA_PATH_MARK, name);
     lua_remove(L, -2);  /* remove path template */
+#ifndef LUAJIT_DISABLE_PACKAGE_LOADERS
     if (readable(filename))  /* does file exist and is readable? */
       return filename;  /* return that file name */
+#endif
     lua_pushfstring(L, "\n\tno file " LUA_QS, filename);
     lua_remove(L, -2);  /* remove file name */
     luaL_addvalue(&msg);  /* concatenate error msg. entry */
@@ -349,6 +355,8 @@ static int lj_cf_package_searchpath(lua_State *L)
     return 2;  /* return nil + error message */
   }
 }
+
+#ifndef LUAJIT_DISABLE_PACKAGE_LOADERS
 
 static const char *findfile(lua_State *L, const char *name,
 			    const char *pname)
@@ -408,6 +416,8 @@ static int lj_cf_package_loader_croot(lua_State *L)
   }
   return 1;
 }
+
+#endif
 
 static int lj_cf_package_loader_preload(lua_State *L)
 {
@@ -552,7 +562,7 @@ static int lj_cf_package_seeall(lua_State *L)
 static void setpath(lua_State *L, const char *fieldname, const char *envname,
 		    const char *def, int noenv)
 {
-#if LJ_TARGET_CONSOLE
+#if LJ_TARGET_CONSOLE || defined(LUAJIT_DISABLE_PACKAGE_LOADERS)
   const char *path = NULL;
   UNUSED(envname);
 #else
@@ -586,11 +596,13 @@ static const luaL_Reg package_global[] = {
 static const lua_CFunction package_loaders[] =
 {
   lj_cf_package_loader_preload,
+#ifndef LUAJIT_DISABLE_PACKAGE_LOADERS
 #ifndef LUAJIT_DISABLE_LOADFILE
   lj_cf_package_loader_lua,
 #endif
   lj_cf_package_loader_c,
   lj_cf_package_loader_croot,
+#endif
   NULL
 };
 
