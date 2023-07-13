@@ -17,13 +17,13 @@
 
 int lj_stdio_panic(lua_State *L, void *panic_ud)
 {
-  syscall2(SYS_kill, syscall0(SYS_getpid), SIGABRT);
+  syscall(SYS_kill, syscall(SYS_getpid), SIGABRT);
   return 0;
 }
 
 long lj_stdio_print(lua_State *L, const void *p, size_t sz, void *print_ud)
 {
-  syscall2(SYS_kill, syscall0(SYS_getpid), SIGABRT);
+  syscall(SYS_kill, syscall(SYS_getpid), SIGABRT);
   return -1;
 }
 
